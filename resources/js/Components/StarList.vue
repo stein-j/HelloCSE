@@ -40,10 +40,19 @@ let stars = ref([])
 let selected_star = ref(null)
 
 function selectStar(id) {
-    selected_star.value = stars.value[stars.value.findIndex(star => star.id === id)]
+    // We will update the current selected star with the
+    // given id, if the given id is the same as the
+    // current star we will unselect it
+    selected_star.value?.id === id
+        ? clearSelection()
+        : selected_star.value = stars.value[stars.value.findIndex(star => star.id === id)]
 }
 
-function freshList() {
+function clearSelection() {
+    selected_star.value = null
+}
+
+function freshList(){
     axios.get('/api/stars').then(res => {
         stars.value = res.data.data;
     });
