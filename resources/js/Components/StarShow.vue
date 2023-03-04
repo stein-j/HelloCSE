@@ -5,11 +5,11 @@
             :src="star.profil_url"
             alt=""/>
         <div
-            class="text-2xl pt-2 pb-2 text-center"
+            class="text-2xl pt-2 pb-2 text-center break-all"
         >{{ star.first_name }} {{ star.last_name }}
         </div>
         <div
-            class="mt-2 text-justify"
+            class="mt-2 text-justify whitespace-pre-line"
         >{{ star.description }}
         </div>
         <div

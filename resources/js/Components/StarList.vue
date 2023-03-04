@@ -21,14 +21,13 @@
             </div>
 
             <div
-                class="overflow-y-auto p-2"
+                class="overflow-y-auto p-2 w-full"
             >
                 <start-show
                     @deleted="starDeleted()"
                     @updated="freshList()"
                     v-if="selected_star"
                     :star="selected_star"
-                    class="ml-2 p-4"
                 />
             </div>
         </div>
