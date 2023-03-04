@@ -23,13 +23,18 @@
             <div
                 class="overflow-y-auto p-2"
             >
-                Current selected star : {{ selected_star?.id }}
+                <start-show
+                    v-if="selected_star"
+                    :star="selected_star"
+                    class="ml-2 p-4"
+                />
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
+import StartShow from "./StarShow.vue";
 import {onMounted, ref} from "vue";
 import axios from "axios";
 
