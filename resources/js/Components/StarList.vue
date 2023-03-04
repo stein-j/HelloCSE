@@ -24,6 +24,8 @@
                 class="overflow-y-auto p-2"
             >
                 <start-show
+                    @deleted="starDeleted()"
+                    @updated="freshList()"
                     v-if="selected_star"
                     :star="selected_star"
                     class="ml-2 p-4"
@@ -55,6 +57,12 @@ function selectStar(id) {
 
 function clearSelection() {
     selected_star.value = null
+}
+
+// handle the event when a star is deleted
+function starDeleted(){
+    clearSelection()
+    freshList()
 }
 
 function freshList(){
