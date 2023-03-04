@@ -1,3 +1,6 @@
 <template>
-    Vue 3 installed
+    <star-list></star-list>
 </template>
+<script setup>
+    import StarList from "./Components/StarList.vue";
+</script>
