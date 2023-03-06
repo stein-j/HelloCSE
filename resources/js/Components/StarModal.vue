@@ -1,8 +1,9 @@
 <template>
     <div
-        class="bg-white rounded-lg pt-6 shadow-lg fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-        <div class="px-6 pb-6 text-center">
-            <div class="mb-6">
+        class="bg-white rounded-lg shadow-lg pt-3 w-2/3 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+    >
+        <div class="px-6 text-center">
+            <div class="my-3">
                 <div class="block mb-2 text-sm font-medium">
                     Prénom
                 </div>
@@ -55,6 +56,14 @@
                 Annuler
             </li>
             <li
+                v-if="creating"
+                @click="create(star)"
+                class="border-b text-blue-800 border-gray-100 w-full px-6 py-3 hover:bg-gray-100"
+            >
+                Créer
+            </li>
+            <li
+                v-else
                 @click="save(star)"
                 class="border-b text-blue-800 border-gray-100 w-full px-6 py-3 hover:bg-gray-100"
             >
@@ -68,8 +77,26 @@
 
 import axios from "axios";
 
-const props = defineProps(['star'])
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'created', 'updated'])
+const props = defineProps({
+    // Inputs will be pre-refilled with the data of the star, if given
+    star: {
+        type: Object,
+        required: false,
+        default: {
+            first_name: null,
+            last_name: null,
+            profil_url: null,
+            description: null,
+        }
+    },
+    // Determine if the modal is used to create a new start
+    creating: {
+        type: Boolean,
+        required: false,
+        default: false
+    }
+})
 
 const original_data = {
     first_name: props.star?.first_name,
@@ -99,6 +126,21 @@ function save(star) {
         'description': star.description,
     })
         .then(() => {
+            close()
+        });
+}
+
+// Add a new star
+function create(star) {
+    axios.post('api/stars', {
+        'first_name': star.first_name,
+        'last_name': star.last_name,
+        'profil_url': star.profil_url,
+        'description': star.description,
+    })
+        .then(() => {
+            resetForm()
+            emit('created')
             close()
         });
 }

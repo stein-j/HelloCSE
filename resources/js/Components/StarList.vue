@@ -3,8 +3,8 @@
         <p>Profile browser</p>
     </div>
     <div>
-        <div class="flex h-96 m-5 border-2 border-solid">
-            <div class="flex-none w-56 overflow-y-auto">
+        <div class="flex m-5 border-2 border-solid h-96">
+            <div class="flex-none relative w-56 overflow-y-auto border-solid border-r-2">
                 <!-- StarList of star names -->
                 <div
                     class="pl-2"
@@ -17,6 +17,20 @@
                         class="font-medium text-medium p-1 text-left truncate"
                     > {{ star.first_name }} {{ star.last_name }}
                     </p>
+                </div>
+                <div class="sticky bottom-2 w-full">
+                    <div
+                        @click="openCreateStarModal"
+                        class="m-5 p-2 bg-blue-400 rounded-full text-center cursor-pointer">
+                        Ajouter
+                    </div>
+                    <star-modal
+                        v-if="create_new_star"
+                        creating
+                        @created="freshList"
+                        @close="closeCreateStarModal"
+                    />
+
                 </div>
             </div>
 
@@ -38,12 +52,16 @@
 import StartShow from "./StarShow.vue";
 import {onMounted, ref} from "vue";
 import axios from "axios";
+import StarModal from "./StarModal.vue";
 
 // The list of stars to display
 let stars = ref([])
 
 // The current star in detail
 let selected_star = ref(null)
+
+// Define if the modal to create a new star should be displayed
+let create_new_star = ref(false)
 
 function selectStar(id) {
     // We will update the current selected star with the
@@ -59,15 +77,23 @@ function clearSelection() {
 }
 
 // handle the event when a star is deleted
-function starDeleted(){
+function starDeleted() {
     clearSelection()
     freshList()
 }
 
-function freshList(){
+function freshList() {
     axios.get('/api/stars').then(res => {
-        stars.value = res.data.data;
+        stars.value = res.data.data.reverse();
     });
+}
+
+function openCreateStarModal() {
+    create_new_star.value = true
+}
+
+function closeCreateStarModal() {
+    create_new_star.value = false
 }
 
 onMounted(() => freshList())
