@@ -13,6 +13,13 @@
                     placeholder="John"
                     required
                 >
+                <div
+                    class="text-left text-red-700"
+                    v-if="errors"
+                    v-for="message in errors.first_name"
+                >
+                    {{message}}
+                </div>
             </div>
             <div class="mb-6">
                 <div class="block mb-2 text-sm font-medium">
@@ -24,6 +31,13 @@
                     placeholder="Doe"
                     required
                 />
+                <div
+                    class="text-left text-red-700"
+                    v-if="errors"
+                    v-for="message in errors.last_name"
+                >
+                    {{message}}
+                </div>
             </div>
             <div class="mb-6">
                 <div class="block mb-2 text-sm font-medium">
@@ -35,6 +49,13 @@
                     placeholder="https://www.example.com/profile1_png"
                     required
                 />
+                <div
+                    class="text-left text-red-700"
+                    v-if="errors"
+                    v-for="message in errors.profil_url"
+                >
+                    {{message}}
+                </div>
             </div>
             <div class="mb-6">
                 <div class="block mb-2 text-sm font-medium">
@@ -46,6 +67,13 @@
                     placeholder="Description de la star"
                     v-model="star.description"
                 ></textarea>
+                <div
+                    class="text-left text-red-700"
+                    v-if="errors"
+                    v-for="message in errors.description"
+                >
+                    {{message}}
+                </div>
             </div>
         </div>
         <ul class="cursor-pointer border-t border-gray-100 w-25 text-center flex">
@@ -76,6 +104,7 @@
 <script setup>
 
 import axios from "axios";
+import {ref} from "vue";
 
 const emit = defineEmits(['close', 'created', 'updated'])
 const props = defineProps({
@@ -98,6 +127,8 @@ const props = defineProps({
     }
 })
 
+let errors = ref([])
+
 const original_data = {
     first_name: props.star?.first_name,
     last_name: props.star?.last_name,
@@ -113,12 +144,18 @@ function resetForm() {
     props.star.description = original_data.description
 }
 
+// Remove errors display on form
+function resetErrors() {
+    errors.value = []
+}
+
 function close() {
     emit('close')
 }
 
 // Push the new data to the api
 function save(star) {
+    resetErrors()
     axios.put('api/stars/' + star.id, {
         'first_name': star.first_name,
         'last_name': star.last_name,
@@ -127,11 +164,15 @@ function save(star) {
     })
         .then(() => {
             close()
+        })
+        .catch(error => {
+            errors.value = error.response.data.errors
         });
 }
 
 // Add a new star
 function create(star) {
+    resetErrors()
     axios.post('api/stars', {
         'first_name': star.first_name,
         'last_name': star.last_name,
@@ -142,6 +183,9 @@ function create(star) {
             resetForm()
             emit('created')
             close()
+        })
+        .catch(error => {
+            errors.value = error.response.data.errors
         });
 }
 
