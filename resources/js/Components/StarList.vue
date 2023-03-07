@@ -4,7 +4,13 @@
     </div>
     <div>
         <div class="flex m-5 border-2 border-solid h-96">
-            <div class="flex-none relative w-56 overflow-y-auto border-solid border-r-2">
+            <div
+                class="flex-none relative overflow-y-auto border-solid"
+                :class="{
+                    'w-56 border-r-2' : !isMobile,
+                    'w-full' : isMobile,
+                }"
+            >
                 <!-- Search star input -->
                 <input
                     class="p-2 mb-1 w-full border-solid border-b-2"
@@ -12,22 +18,37 @@
                     v-model="search"
                     placeholder="Rechercher"
                 />
-                <!-- StarList of star names -->
                 <div class="text-center m-2" v-if="search&&!filteredStars().length">
                     Aucun résultat
                 </div>
+                <!-- StarList of star names -->
                 <div
                     class="pl-2"
-                    :class="{
-                        'bg-gray-100 hover:bg-gray-200' : star.id !== selected_star?.id
-                    }"
-                    v-for="star in filteredStars()" @click="selectStar(star.id)"
+                    v-for="star in filteredStars()"
                 >
                     <p
+                        @click="selectStar(star.id)"
                         class="font-medium text-medium p-1 text-left truncate"
+                        :class="{
+                        'bg-gray-100 hover:bg-gray-200' : star.id !== selected_star?.id
+                    }"
+
                     > {{ star.first_name }} {{ star.last_name }}
                     </p>
+                    <!-- Display star details for mobile windows-->
+                    <div
+                        v-if="selected_star?.id === star.id && isMobile"
+                        class=""
+                    >
+                        <start-show
+                            @deleted="starDeleted()"
+                            @updated="freshList()"
+                            :star="selected_star"
+                        />
+                    </div>
                 </div>
+
+                <!-- Add new item button and modal -->
                 <div class="sticky bottom-2 w-full">
                     <div
                         @click="openCreateStarModal"
@@ -43,8 +64,9 @@
 
                 </div>
             </div>
-
+            <!-- Display star details for non mobile windows -->
             <div
+                v-if="!isMobile"
                 class="overflow-y-auto p-2 w-full"
             >
                 <start-show
@@ -110,6 +132,12 @@ function filteredStars() {
     );
 }
 
+let isMobile = ref(false)
+
+function updateIsMobile() {
+    isMobile.value = window.innerWidth <= 760
+}
+
 function openCreateStarModal() {
     create_new_star.value = true
 }
@@ -118,7 +146,13 @@ function closeCreateStarModal() {
     create_new_star.value = false
 }
 
-onMounted(() => freshList())
+onMounted(() => {
+    freshList()
+    updateIsMobile()
+    window.addEventListener("resize", () => {
+        updateIsMobile()
+    });
+})
 </script>
 
 <style scoped>
