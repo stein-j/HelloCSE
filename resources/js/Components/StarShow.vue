@@ -19,7 +19,7 @@
         >{{ star.first_name }} {{ star.last_name }}
         </div>
         <div
-            class="mt-2 text-justify whitespace-pre-line"
+            class="mt-2 text-justify whitespace-pre-line min-h-[100px]"
         >{{ star.description }}
         </div>
     </div>

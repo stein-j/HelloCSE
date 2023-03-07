@@ -1,6 +1,6 @@
 <template>
     <div
-        class="bg-white rounded-lg shadow-lg pt-3 w-2/3 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+        class="bg-white rounded-lg shadow-lg pt-3 w-2/3 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20"
     >
         <div class="px-6 text-center">
             <div class="my-3">
