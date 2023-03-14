@@ -84,5 +84,16 @@ Lancer le serveur web :
 php artisan serve
 ```
 
-Accéder à la page web `http://127.0.0.1:8000/`
+Accéder à la page web `http://127.0.0.1:8000/`.
 
+La liste des fonctionnalités sont présentes ici : https://github.com/stein-j/HelloCSE#fonctionnalit%C3%A9s-impl%C3%A9ment%C3%A9es
+
+# Tester
+
+[Pest](https://pestphp.com/) est utilisé pour l'execution des tests, les fichiers sont localisés dans _./test/Feature/*_.
+
+Les tests peuvent être executés via la commande Laravel :
+
+```bash
+php atisan test
+```
